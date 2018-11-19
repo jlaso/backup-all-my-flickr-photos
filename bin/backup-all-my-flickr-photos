@@ -46,8 +46,11 @@ def main():
     for photo in walker:
         i += 1
         print("Item %04d/%04d entitled %s" % (i, total_photos, photo.title))
-        filename = automatic_retry(lambda: download_item(photo, download_dir))
-        files_in_flickr.add(os.path.realpath(filename))
+        try:
+            filename = automatic_retry(lambda: download_item(photo, download_dir))
+            files_in_flickr.add(os.path.realpath(filename))
+        except Exception as e:
+            print("Error %s downloading item %s" % (str(e), photo.title))
 
     if args.delete:
         clean_stale_files(files_in_flickr, download_dir)
