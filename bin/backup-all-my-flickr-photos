@@ -236,8 +236,11 @@ def automatic_retry(function):
             else:
                 print("Unrecognized socket error", file=sys.stderr)
                 raise
+        except Exception as ee:
+            print("Unexpected error", str(ee))
+
     print("Reached number of retries: %d" % (retries,))
-    return function()
+    # return function()
 
 
 if __name__ == "__main__":
