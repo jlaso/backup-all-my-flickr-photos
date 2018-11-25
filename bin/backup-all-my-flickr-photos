@@ -41,6 +41,7 @@ def main():
     total_photos = user.getPhotos().info.total
     walker = flickr_api.Walker(user.getPhotos)
     files_in_flickr = set()
+    errors = {}
 
     i = 0
     for photo in walker:
@@ -50,11 +51,18 @@ def main():
             filename = automatic_retry(lambda: download_item(photo, download_dir))
             files_in_flickr.add(os.path.realpath(filename))
         except Exception as e:
+            errors[photo.title] = str(e)
             print("Error %s downloading item %s" % (str(e), photo.title))
 
     if args.delete:
         clean_stale_files(files_in_flickr, download_dir)
 
+    if len(errors):
+        print("These are the files that thrown errors")
+        for e in errors:
+            print("%s: %s" % (e, errors[e]))
+
+            
 def set_up_account_permissions():
     config_directory = get_config_directory()
     auth_filename = os.path.join(config_directory, "account_auth")
