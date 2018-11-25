@@ -23,6 +23,7 @@ _extensions = ["jpg", "mov", "mp4", "png", "flv", "gif"]
 if not hasattr(flickr_api.Walker, '__next__'):
     flickr_api.Walker.__next__ = flickr_api.Walker.next
 
+
 def main():
     parser = argparse.ArgumentParser(description="Download all your photos and videos on Flickr")
     parser.add_argument('destination_directory', metavar='d', type=six.text_type, help='Destination directory')
@@ -42,7 +43,7 @@ def main():
     walker = flickr_api.Walker(user.getPhotos)
     files_in_flickr = set()
     errors = {}
-
+    
     i = 0
     for photo in walker:
         i += 1
@@ -62,7 +63,7 @@ def main():
         for e in errors:
             print("%s: %s" % (e, errors[e]))
 
-            
+
 def set_up_account_permissions():
     config_directory = get_config_directory()
     auth_filename = os.path.join(config_directory, "account_auth")
@@ -244,8 +245,8 @@ def automatic_retry(function):
             else:
                 print("Unrecognized socket error", file=sys.stderr)
                 raise
-        except Exception as ee:
-            print("Unexpected error", str(ee))
+        # except Exception as ee:
+        #     print("Unexpected error", str(ee))
 
     print("Reached number of retries: %d" % (retries,))
     # return function()
